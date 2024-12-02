@@ -94,9 +94,17 @@ const Cart = () => {
                 <button type="button" className="px-6 py-2 border rounded-md dark:border-violet-600">Back
                     <Link to='/order/All' className="sr-only sm:not-sr-only"> to shop</Link>
                 </button>
-                <button type="button" className="px-6 py-2 border rounded-md dark:bg-violet-600 dark:text-gray-50 dark:border-violet-600">
-                    <Link className="sr-only sm:not-sr-only">Continue to</Link> Checkout
-                </button>
+
+
+                {
+                    cart.length? <button type="button" className="px-6 py-2 border rounded-md dark:bg-violet-600 dark:text-gray-50 dark:border-violet-600">
+                    <Link to='/dashboard/payment' className="sr-only sm:not-sr-only">Continue to Checkout</Link> 
+                </button> :
+                <>
+                </>
+                }
+
+
                 <button type="button" className="px-6 py-2 border rounded-md dark:bg-violet-600 dark:text-gray-50 dark:border-violet-600 flex items-center px-2 py-1 pl-0 space-x-1">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="w-4 h-4 fill-current">
                         <path d="M96,472a23.82,23.82,0,0,0,23.579,24H392.421A23.82,23.82,0,0,0,416,472V152H96Zm32-288H384V464H128Z"></path>
