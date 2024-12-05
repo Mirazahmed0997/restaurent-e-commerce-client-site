@@ -17,6 +17,9 @@ import AdminRoute from "./AdminRoute";
 import ManageItems from "../Pages/Dashboard/ManageItems/ManageItems";
 import UpdateItem from "../Pages/Dashboard/UpdateItem/UpdateItem";
 import PaymentGetway from "../Pages/Dashboard/PaymentGetway/PaymentGetway";
+import PaymentHistory from "../Pages/Dashboard/PaymentHistory/PaymentHistory";
+import UserHome from "../Pages/Dashboard/UserHome/UserHome";
+import AdminHome from "../Pages/Dashboard/AdminHome/AdminHome";
 
  export const router = createBrowserRouter([
     {
@@ -47,6 +50,7 @@ import PaymentGetway from "../Pages/Dashboard/PaymentGetway/PaymentGetway";
             path:'signUp',
             element: <SignUp></SignUp>
         },
+       
       ]
     },
     {
@@ -61,12 +65,24 @@ import PaymentGetway from "../Pages/Dashboard/PaymentGetway/PaymentGetway";
           path:'/dashboard/payment',
           element:<PaymentGetway></PaymentGetway>
         },
+        {
+          path:'/dashboard/paymentHistory',
+          element:<PaymentHistory></PaymentHistory>
+        },
+        {
+          path:'/dashboard/userHome',
+          element:<UserHome></UserHome>
+        },
 
         // ------admin Routes-----
 
         {
           path:'/dashboard/addItems',
           element:<AdminRoute><AddItems></AddItems></AdminRoute>
+        },
+        {
+          path:'/dashboard/adminHome',
+          element:<AdminRoute><AdminHome></AdminHome></AdminRoute>
         },
         {
           path:'/dashboard/allUsers',
@@ -80,7 +96,7 @@ import PaymentGetway from "../Pages/Dashboard/PaymentGetway/PaymentGetway";
           path:'/dashboard/updateItem/:id',
           // element:<UpdateItem></UpdateItem>,
           element:<AdminRoute><UpdateItem></UpdateItem></AdminRoute>,
-          loader: ({params})=>fetch(`http://localhost:5000/menu/${params.id}`)
+          loader: ({params})=>fetch(`https://restaurent-e-commerce-server-lrltgsmhl-mirazahmed0997s-projects.vercel.app/?vercelToolbarCode=1PZkp2uCvJ50xtNmenu/${params.id}`)
         },
       ]
     }

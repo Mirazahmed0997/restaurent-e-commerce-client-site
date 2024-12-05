@@ -3,7 +3,7 @@ import UseAuth from "../Auth/UseAuth";
 import UseAxios from "../useAxios/UseAxios";
 
 const UseAdmin = () => {
-    const {user}=UseAuth();
+    const {user,loading}=UseAuth();
     const axiosSecure= UseAxios()
    const {data: isAdmin, isPending: isAdminLoading}=useQuery({
     queryKey:[user?.email,'isAdmin'],

@@ -2,6 +2,9 @@ import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import React, { useEffect, useState } from 'react';
 import UseAxios from '../../../Hooks/useAxios/UseAxios';
 import USeCart from '../../../Hooks/UseCart/USeCart';
+import UseAuth from '../../../Hooks/Auth/UseAuth';
+import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
 
 const CheckoutForm = () => {
@@ -10,21 +13,26 @@ const CheckoutForm = () => {
     const elements = useElements();
     const axiosSecure = UseAxios();
     const [error, setError] = useState()
-    const [cart] = USeCart();
+    const [cart,refetch] = USeCart();
+    const [transactionId,setTransactionId]=useState('')
     const [clientSecret,setClientSecret]=useState('')
+    const navigate=useNavigate();
+    const {user}=UseAuth()
     const price = cart.reduce((sum, item) => sum + item.price, 0)
 
 
 
     useEffect(() => {
+       if(price>0)
+       {
         axiosSecure.post('create-payment-intent', { price: price })
 
         .then(res=>
         {
             console.log(res.data.clientSecret)
             setClientSecret(res.data.clientSecret)
-        }
-        )
+        })
+       }
     }, [axiosSecure, price])
 
     const handleSubmit = async (event) => {
@@ -55,6 +63,54 @@ const CheckoutForm = () => {
             setError(' ')
         }
 
+        // confirm payment
+
+        const {paymentIntent,error:confirmError }= await stripe.confirmCardPayment(clientSecret, {
+            payment_method:{
+                card:card,
+                billing_details:{
+                    email: user?.email || 'anonymous',
+                    name: user?.displayName || 'anonymous'
+                }
+            }
+        })
+
+        if(confirmError)
+        {
+            setTransactionId('')
+            console.log("confirm error")
+        }
+        else{
+            console.log('payment intent', paymentIntent)
+            if(paymentIntent.status==='succeeded')
+            {
+                console.log(paymentIntent.id)
+                setTransactionId(paymentIntent.id)
+
+                const payment={
+                    email: user.email,
+                    price: price,
+                    transactionId:paymentIntent.id,
+                    date: new Date(),
+                    cartIds: cart.map(item=>item._id),
+                    menuItemIds: cart.map(item=>item.cartId),
+                    status: 'Pending'
+                }
+
+                const res= await axiosSecure.post('payments',payment);
+                refetch();
+                if(res.data?.paymentHistory?.insertedId)
+                {
+                    Swal.fire({
+                        title: "Good job!",
+                        text: "Payment Success",
+                        icon: "success"
+                      });
+                }
+                navigate('/dashboard/paymentHistory')
+            }
+        }
+
 
     }
 
@@ -80,6 +136,9 @@ const CheckoutForm = () => {
                 Pay
             </button>
             <p className='text-red-900'>{error}</p>
+            {
+                transactionId && <p className='text-green-600'>Your transaction Id : {transactionId}</p>
+            }
         </form>
     );
 };
