@@ -6,6 +6,7 @@ import { Pagination } from 'swiper/modules';
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/pagination';
+import SearchComponent from '../../SearchComponent/SearchComponent';
 
 
 const OrderTab = ({ items }) => {
@@ -19,22 +20,23 @@ const OrderTab = ({ items }) => {
 
 
     return (
-            <>
-                <Swiper
-                    pagination={pagination}
-                    modules={[Pagination]}
-                    className="mySwiper"
-                >
-                    <SwiperSlide>
-                        <div  className='grid md:grid-cols-3 gap-10'>
-                            {
-                                items.map(item => <AllItemsCard key={item._id} item={item}></AllItemsCard>)
-                            }
-                        </div>
-                    </SwiperSlide>
+        <>
 
-                </Swiper>
-            </>
+            <Swiper
+                pagination={pagination}
+                modules={[Pagination]}
+                className="mySwiper"
+            >
+                <SwiperSlide>
+                    <div className='grid md:grid-cols-3 gap-10'>
+                        {
+                            items.map(item => <AllItemsCard key={item._id} item={item}></AllItemsCard>)
+                        }
+                    </div>
+                </SwiperSlide>
+
+            </Swiper>
+        </>
     );
 };
 
